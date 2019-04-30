@@ -1,6 +1,14 @@
 # pwn_debug
 **pwn_debug** -- An auxiliary debugging tool for ctf pwns based on pwntools
 
+## Content
+
+* [Key Features](https://github.com/ray-cp/pwn_debug#key-features)
+* [Usage](https://github.com/ray-cp/pwn_debug#usage)
+* [Installation](https://github.com/ray-cp/pwn_debug#installation)
+* [Release log](https://github.com/ray-cp/pwn_debug#release-log)
+
+
 ## Key Features
 It mainly has four features:
 
@@ -60,7 +68,7 @@ def debug(self,libc_version,env={}):
 
 In `debug` mode, you just need to declare the `libc version` like `2.23` or `2.29`, **pwn_debug** will auto set the mode.
 
-but one thing you need to know is that you must have the corresponding libc in your dir, you can download or compilt it follow the [Installation]().
+but one thing you need to know is that you must have the corresponding libc in your dir, you can download or compilt it follow the [Installation](https://github.com/ray-cp/pwn_debug#install-glibc-with-symbols).
 
 the code is normally like below:
 ```
@@ -183,3 +191,6 @@ compile all the version(no parameter means compile all)
 ./build.sh 
 ```
 
+## Release log
+
+* 2019-04-30: v0.1 beta version
