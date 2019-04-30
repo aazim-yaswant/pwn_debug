@@ -21,6 +21,7 @@ It mainly has four features:
 
 ## Usage
 There are four steps to use **pwn_debug**:
+0. import the tool `from pwn_debug.pwn_debug import *`
 1. Declare a pwn_debug object: `pdbg=pwn_debug("binary")`
 2. Set the mode parameters, three mode in total: `debug`, `local` and `remote`. You don't need to Set all the three mode, just set the mode parameters which you wanna do.
 3. Run the mode.
@@ -30,29 +31,31 @@ There are four steps to use **pwn_debug**:
 A typical example is shown as below:
 
 ```
-    ## step 1
-    pdbg=pwn_debug("binary")
+from pwn_debug.pwn_debug import *
 
-    pdbg.context.terminal=['tmux', 'splitw', '-h']
+## step 1
+pdbg=pwn_debug("binary")
 
-    ## step 2
-    pdbg.local("libc.so.6")
-    pdbg.debug("2.23")
-    pdbg.remote('34.92.96.238',10000)
-    ## step 3
-    #p=pdbg.run("local")
-    #p=pdbg.run("debug")
-    p=pdbg.run("remote")
+pdbg.context.terminal=['tmux', 'splitw', '-h']
 
-    pdbg.bp(0x80489aa)
+## step 2
+pdbg.local("libc.so.6")
+pdbg.debug("2.23")
+pdbg.remote('34.92.96.238',10000)
+## step 3
+#p=pdbg.run("local")
+#p=pdbg.run("debug")
+p=pdbg.run("remote")
 
-    elf=pdbg.elf
-    print hex(elf.got['printf'])
-    print hex(elf.plt['printf'])
+pdbg.bp(0x80489aa)
 
-    libc=pdbg.libc
-    print libc.symbols['system']
-    p.interactive()
+elf=pdbg.elf
+print hex(elf.got['printf'])
+print hex(elf.plt['printf'])
+
+libc=pdbg.libc
+print libc.symbols['system']
+p.interactive()
 ```
 
 As shown above, there are three mode in **pwn_debug**: `debug`, `local`, `remote`.
@@ -72,12 +75,12 @@ but one thing you need to know is that you must have the corresponding libc in y
 
 the code is normally like below:
 ```
-    pdbg=pwn_debug("binary")
-    pdbg.debug("2.23")
-    p=pdbg.run("debug")
-    pdbg.bp(0x80489aa)
-    p.interactive()
-
+from pwn_debug.pwn_debug import *
+pdbg=pwn_debug("binary")
+pdbg.debug("2.23")
+p=pdbg.run("debug")
+pdbg.bp(0x80489aa)
+p.interactive()
 ```
 
 ### local mode
@@ -95,13 +98,14 @@ If you wanna use the libc that the organizer gives out, you should give the corr
 
 the code is normally like below:
 ```
-    pdbg=pwn_debug("binary")
-    pdbg.local()
-    #pdbg.local("./libc.so.6")
-    #gdbp.local("./libc.so.6","ld.so")
-    p=pdbg.run("local")
-    pdbg.bp(0x80489aa)
-    p.interactive()
+from pwn_debug.pwn_debug import *
+pdbg=pwn_debug("binary")
+pdbg.local()
+#pdbg.local("./libc.so.6")
+#gdbp.local("./libc.so.6","ld.so")
+p=pdbg.run("local")
+pdbg.bp(0x80489aa)
+p.interactive()
 ```
 
 ### remote mode
@@ -117,12 +121,13 @@ if you do not give the libc path means you wanna use the libc version on your ho
 
 the code is normally like below:
 ```
-    pdbg=pwn_debug("binary")
-    pdbg.remote('10.10.10.1',1234)
-    #pdbg.remote('10.10.10.1',1234,'./libc.so.6')
-    p=pdbg.run("remote")
-    pdbg.bp(0x80489aa)
-    p.interactive()
+from pwn_debug.pwn_debug import *
+pdbg=pwn_debug("binary")
+pdbg.remote('10.10.10.1',1234)
+#pdbg.remote('10.10.10.1',1234,'./libc.so.6')
+p=pdbg.run("remote")
+pdbg.bp(0x80489aa)
+p.interactive()
 ```
 note that the breakpoint `pdbg.bp` will not affect the remote connect, so you don't need to comment the line in `remote` mode.
 
@@ -145,6 +150,9 @@ Function prototype:
 
 example:
 ```
+from pwn_debug.pwn_debug import *
+pdbg=pwn_debug("binary")
+p=pdbg.run("local")
 pdbg.bp(0x80489aa)
 pdbg.bp([0x9aa,0x8aa])
 pdbg.bp([0x9aa,0x8aa],'parent',['x/6gx $rdi', 'i r rax'])
