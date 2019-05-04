@@ -94,12 +94,18 @@ class pwn_debug(object):
         #print self.p_type
         if self.p_type=="debug":
             #print "123"
-            return self.run_debug()
+            self.run_debug()
         elif self.p_type=="local":
             #print "44"
-            return self.run_local()
+            self.run_local()
         elif self.p_type=="remote":
-            return self.run_remote()
+            self.membp=membp(self.process)
+            self.run_remote()
+        if self.p_type!="remote":   
+            self.membp=membp(self.process)
+            return self.process
+        else:
+            return self.remote
 
     ## debug run
     def run_debug(self):
@@ -160,7 +166,7 @@ class pwn_debug(object):
         if self.p_type=="remote":
             log.info("breakpoint ignored for remote connect")
             return
-        self.membp=membp(self.process)
+        #self.membp=membp(self.process)
         self.membp.breakpoint(address_list,fork_follow,command)
 
 

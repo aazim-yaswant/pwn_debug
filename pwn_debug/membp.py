@@ -16,10 +16,25 @@ class membp(object):
             mem.seek(address)
             return mem.read(size)
 
-    
+    def get_libc_base(self):
+        with open('/proc/%s/maps' % self.pid) as maps:
+            for line in maps:
+                #print line
+                if "libc" in line and "so" in line:
+                    addr = int(line.split('-')[0], 16)
+                    libc_header=self.leak(addr,0x20)
+                    if libc_header[:4] == "\x7fELF":
+                        self.libc_base=addr
+                        log.info("libc base: %s"%hex(self.libc_base))
+                        return
+        log.info("can't not found libc base!!")
+                    
     def set_basic_info(self):
-        
+         
         self.pid=proc.pidof(self.process)[0]
+        self.get_libc_base()
+        self.get_elf_base()
+    def get_elf_base(self):
         name = os.readlink('/proc/%s/exe' % self.pid)
         with open('/proc/%s/maps' % self.pid) as maps:
             for line in maps:
@@ -37,13 +52,14 @@ class membp(object):
                         bitFormat=u16(elf_header[16:18])
                         if bitFormat == 0x3:
                             self.pie=1
-                            log.info("PIE")
+                            log.info("PIE ENABLED")
                         elif bitFormat==0x2:
                             self.pie=0
+                            log.info("PIE DISABLED")
                         else:
                             log.erroe("unknown pie")
-                        self.module_base=addr
-                        log.info("programe base: %s"%hex(self.module_base))
+                        self.elf_base=addr
+                        log.info("programe base: %s"%hex(self.elf_base))
                         return
         log.error("Module's base address not found.")
         exit(1)
@@ -55,12 +71,12 @@ class membp(object):
         
         if 'int' in str(type(address_list)):
             if self.pie:
-                address_list=self.module_base+address_list
+                address_list=self.elf_base+address_list
             debug_stri+='b* '+hex(address_list)+'\n'
         elif 'list' in str(type(address_list)):
             if self.pie:
                 for i in range(0,len(address_list)):
-                    address_list[i]=self.module_base+address_list[i]
+                    address_list[i]=self.elf_base+address_list[i]
             for addr in address_list:
                 debug_stri+='b* '+hex(addr)+'\n'
         

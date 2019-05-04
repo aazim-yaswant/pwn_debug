@@ -132,6 +132,22 @@ p.interactive()
 ```
 note that the breakpoint `pdbg.bp` will not affect the remote connect, so you don't need to comment the line in `remote` mode.
 
+### membp
+membp is a module of `pwn_debug`, which provides the memory related function of the process. it is used to get info in `local` and `debug` mode for your conveniently debug, only works in `debug` or `local` mode.
+
+right now, only provide libc base address(`membp.libc_base`) and program base address(membp.elf_base)
+(you can check whether your leaking address is right or not with this function.)
+
+example:
+```
+from pwn_debug.pwn_debug import *
+pdbg=pwn_debug("binary")
+p=pdbg.run("debug")
+membp=pdbg.membp
+print hex(membp.libc_base), hex(membp.elf_base)
+p.interactive()
+```
+
 ### Anthor Component
 
 * make breakpoint
@@ -203,3 +219,5 @@ compile all the version(no parameter means compile all)
 ## Release log
 
 * 2019-04-30: v0.1 beta version
+* 2019-05-04: v0.1.1  version
+    add membp module related to memory
