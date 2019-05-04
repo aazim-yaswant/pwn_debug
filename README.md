@@ -186,7 +186,7 @@ pdbg.bp([0x9aa,0x8aa],'parent',['x/6gx $rdi', 'i r rax'])
 ```
 git clone https://github.com/ray-cp/pwn_debug.git
 cd pwn_debug
-python setup.py install 
+sudo python setup.py install 
 # or python setup.py install --user
 ```
 
