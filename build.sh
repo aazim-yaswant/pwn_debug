@@ -89,7 +89,7 @@ if [ -n "$GLIBC_VERSION" ]; then
     #cd ..
     #cd x86
     Install_Glibc_x86 $GLIBC_VERSION
-    elete_Glibc_Tar $GLIBC_VERSION
+    Delete_Glibc_Tar $GLIBC_VERSION
     #cd ..
 else
     for GLIBC_VERSION in '2.19' '2.23' '2.24' '2.25' '2.26' '2.27' '2.28' '2.29'
