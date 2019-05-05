@@ -75,7 +75,7 @@ Install_Glibc_x86(){
 }
 
 #delte the tar of glibc
-Delete_Glibc_Tar {
+Delete_Glibc_Tar() {
     sudo rm glibc-$1.tar.gz
 }
 
