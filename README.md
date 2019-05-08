@@ -139,12 +139,14 @@ membp is a module of `pwn_debug`, which provides the memory related function of 
 right now, only provide libc base address(`membp.libc_base`) and program base address(membp.elf_base)
 (you can check whether your leaking address is right or not with this function.)
 
+note that you can't use membp in remote mode
+
 example:
 ```
 from pwn_debug.pwn_debug import *
 pdbg=pwn_debug("binary")
 p=pdbg.run("debug")
-membp=pdbg.membp
+membp=pdbg.membp()
 print hex(membp.libc_base), hex(membp.elf_base)
 p.interactive()
 ```
@@ -226,3 +228,4 @@ compile all the version(no parameter means compile all)
 
 ## plan
 * one gadget related
+* io file related
