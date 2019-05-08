@@ -7,6 +7,7 @@
 * [Usage](https://github.com/ray-cp/pwn_debug#usage)
 * [Installation](https://github.com/ray-cp/pwn_debug#installation)
 * [Release log](https://github.com/ray-cp/pwn_debug#release-log)
+* [Plan to do](https://github.com/ray-cp/pwn_debug#plan-to-do)
 
 
 ## Key Features
@@ -221,3 +222,7 @@ compile all the version(no parameter means compile all)
 * 2019-04-30: v0.1 beta version
 * 2019-05-04: v0.1.1  version
     add membp module related to memory
+
+
+## plan
+* one gadget related

@@ -99,7 +99,7 @@ class pwn_debug(object):
             #print "44"
             self.run_local()
         elif self.p_type=="remote":
-            self.membp=membp(self.process)
+            #self.membp=membp(self.process)
             self.run_remote()
         if self.p_type!="remote":   
             self.membp=membp(self.process)
@@ -162,6 +162,12 @@ class pwn_debug(object):
         ### start remote connect
         self.remote=remote(self.remote_host,self.remote_port)
         return self.remote
+    def membp(self):
+        if self.p_type=="remote":
+            log.error("you can't not use membp in remote mode")
+            return
+        return self.membp
+
     def bp(self,address_list=[],fork_follow="child",command=[]):
         if self.p_type=="remote":
             log.info("breakpoint ignored for remote connect")
