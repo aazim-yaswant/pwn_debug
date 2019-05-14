@@ -9,19 +9,35 @@ class pwn_debug(object):
         self.pwn_name=pwn_name
         self.pwn_path="/tmp/"+pwn_name 
         #context.terminal = ['tmux', 'splitw', '-h']
-        self.arch=self.get_arch()
-        log.debug(self.arch)
-        
+        self.get_basic_info()
+        log.info("ELF arch: %s"%self.arch)
+        log.info("ELF endian: %s"%self.endian)
+
         ## get some class from pwn
         self.get_pwn_class()
+        self.context.arch=self.arch
+        self.context.endian=self.endian
         #self.set_default()
 
     # get class from pwn including: context
     def get_pwn_class(self):
         #log.info("some class")
         self.context=context
-    # get the arch of binary, 1 represents linux x86, 2 represens linux x64
-    def get_arch(self):
+    def __getattr__(self,item):
+        #print "******"
+        #print item
+        if item=="membp" and self.p_type=="remote":
+            log.error("Can't use membp in remote mode")
+
+            return None
+        
+            
+        
+        log.error("No %s in pwn_debug"%item)
+        exit(0)
+
+
+    def get_basic_info(self):
         if self.pwn_name:
             pwn_name=self.pwn_name
         else:
@@ -30,14 +46,23 @@ class pwn_debug(object):
             if fd.read(4) =='\x7fELF':
                 arch=u8(fd.read(1))
                 if arch==2:
-                    return "amd64"
+                    self.arch="amd64"
                 elif arch==1:
-                    return "x86"
+                    self.arch="x86"
                 else:
                     log.error("elf with a unknow arch")
+                endian=u8(fd.read(1))
+                if arch==2:
+                    self.endian="little"
+                elif arch==1:
+                    self.endian="big"
+                else:
+                    log.error("elf with a unknow endian")
+
             else:
                 log.error("not a elf file")
                 exit(0)
+        
     def debug(self,libc_version,env={}):
         self.debug_libc_version=libc_version
         self.build_debug_info(libc_version,env)
@@ -130,6 +155,7 @@ class pwn_debug(object):
         ### change ld.so if need
         #print self.local_ld_path,self.pwn_path
         if self.local_ld_path:
+            #print "here"
             cmd='patchelf --set-interpreter '+self.local_ld_path+' '+self.pwn_path
             os.system(cmd)
             sleep(0.2)
@@ -162,11 +188,6 @@ class pwn_debug(object):
         ### start remote connect
         self.remote=remote(self.remote_host,self.remote_port)
         return self.remote
-    def membp(self):
-        if self.p_type=="remote":
-            log.error("you can't not use membp in remote mode")
-            return
-        return self.membp
 
     def bp(self,address_list=[],fork_follow="child",command=[]):
         if self.p_type=="remote":
@@ -174,6 +195,5 @@ class pwn_debug(object):
             return
         #self.membp=membp(self.process)
         self.membp.breakpoint(address_list,fork_follow,command)
-
 
 

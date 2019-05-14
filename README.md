@@ -146,7 +146,7 @@ example:
 from pwn_debug.pwn_debug import *
 pdbg=pwn_debug("binary")
 p=pdbg.run("debug")
-membp=pdbg.membp()
+membp=pdbg.membp
 print hex(membp.libc_base), hex(membp.elf_base)
 p.interactive()
 ```
@@ -226,6 +226,6 @@ compile all the version(no parameter means compile all)
     add membp module related to memory
 
 
-## plan
+## Plan to do
 * one gadget related
 * io file related
