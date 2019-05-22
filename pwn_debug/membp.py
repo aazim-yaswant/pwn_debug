@@ -20,7 +20,8 @@ class membp(object):
         with open('/proc/%s/maps' % self.pid) as maps:
             for line in maps:
                 #print line
-                if "libc" in line and "so" in line:
+                name=line.split("/")[-1]
+                if "libc" in name and "so" in name:
                     addr = int(line.split('-')[0], 16)
                     libc_header=self.leak(addr,0x20)
                     if libc_header[:4] == "\x7fELF":
